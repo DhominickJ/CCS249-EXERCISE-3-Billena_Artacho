@@ -59,7 +59,7 @@ class Bigrams:
                 log_likelihood += -1 * log2(probability)
 
         perplexity = 2 ** (log_likelihood / total_tokens)
-        print(f"Bigram model perplexity: {perplexity:.2f}")
+        print(f"Bigram model perplexity: {perplexity:.2f} (Noice)")
 
 
 class Trigrams: 
