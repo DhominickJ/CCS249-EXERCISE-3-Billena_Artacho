@@ -7,13 +7,14 @@ from nltk.util import bigrams as nltk_bigrams
 from nltk.util import trigrams as nltk_trigrams
 from nltk.tokenize import word_tokenize
 from collections import Counter
+from math import log2
 
 # Getting the RE: Zero Wikipedia Page
 wiki = wk.Wikipedia(user_agent='firefox', language='en')
 page = wiki.page("Rem (Re:Zero)")
 text = page.summary
 
-print(f"Title: {page.title}")
+print(f"\nTitle: {page.title}\n")
 # print(f"Summary: {page.summary[:1000]}")
 print(text[:1200])
 
@@ -47,20 +48,19 @@ class Bigrams:
     def evaluate_bigrams(self, bigram_probs, test_text):
         tokens = word_tokenize(test_text.lower())
         test_bigrams = list(nltk_bigrams(tokens))
-        correct = 0
-        total = 0
-        
-        for i in range(len(test_bigrams)):
-            current_word = test_bigrams[i][0]
-            actual_next = test_bigrams[i][1]
-            predicted = self.bigrams_predict_next_word(bigram_probs, current_word)
-            
-            if predicted == actual_next:
-                correct += 1
-            total += 1
-        
-        accuracy = correct / total if total > 0 else 0
-        print(f"Bigram model accuracy: {accuracy:.2%}")
+
+        # Evaluate the perplexity of the model:
+        log_likelihood = 0
+        total_tokens = len(test_bigrams)
+
+        for bigram in test_bigrams:
+            if bigram in bigram_probs:
+                probability = bigram_probs[bigram]
+                log_likelihood += -1 * log2(probability)
+
+        perplexity = 2 ** (log_likelihood / total_tokens)
+        print(f"Trigram model perplexity: {perplexity:.2f}")
+
 
 class Trigrams: 
     def __init__(self, text, laplace_value):
@@ -89,23 +89,21 @@ class Trigrams:
     def evaluate_trigrams(self, trigrams_probs, test_text):
         tokens = word_tokenize(test_text.lower())
         test_trigrams = list(nltk_trigrams(tokens))
-        correct = 0
-        total = 0
-        
-        for i in range(len(test_trigrams)):
-            current_word = test_trigrams[i][0]
-            actual_next = test_trigrams[i][1]
-            predicted = self.trigrams_predict_next_word(trigrams_probs, current_word)
-            
-            if predicted == actual_next:
-                correct += 1
-            total += 1
-        
-        accuracy = correct / total if total > 0 else 0
-        print(f"Trigrams model accuracy: {accuracy:.2%}")
+
+        # Evaluate the perplexity of the model:
+        log_likelihood = 0
+        total_tokens = len(test_trigrams)
+
+        for trigram in test_trigrams:
+            if trigram in trigrams_probs:
+                probability = trigrams_probs[trigram]
+                log_likelihood += -1 * log2(probability)
+
+        perplexity = 2 ** (log_likelihood / total_tokens)
+        print(f"Trigram model perplexity: {perplexity:.2f}")
 
 # Bigrams
-print("BIGRAMS MODEL: ")
+print("\nBIGRAMS MODEL: ")
 bigrams = Bigrams(text, LAPLACE_VALUE)
 wiki_bigram = bigrams.bigram_probabilities()
 
