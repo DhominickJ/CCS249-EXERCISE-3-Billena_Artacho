@@ -12,7 +12,7 @@ from math import log2
 # Getting the RE: Zero Wikipedia Page
 wiki = wk.Wikipedia(user_agent='firefox', language='en')
 page = wiki.page("Rem (Re:Zero)")
-text = page.summary
+text = page.summary[:1000]
 
 print(f"\nTitle: {page.title}\n")
 # print(f"Summary: {page.summary[:1000]}")
