@@ -2,7 +2,7 @@
 # Created by: Billena Dhominick John and Artacho, Cristopher Ian 
 
 # Creating the Imports
-import wikipediaapi as wk
+import wikipediaapi as wk # It returns a more structured data
 from nltk.util import bigrams as nltk_bigrams
 from nltk.util import trigrams as nltk_trigrams
 from nltk.tokenize import word_tokenize
@@ -12,7 +12,8 @@ from math import log2
 # Getting the RE: Zero Wikipedia Page
 wiki = wk.Wikipedia(user_agent='firefox', language='en')
 page = wiki.page("Rem (Re:Zero)")
-text = page.summary[:1000]
+text = page.summary[:1000] #It limits our effectivity if we use a limit of 1000 but we checked the summary and it's only around 1300 characters so we sticked with the full summary.
+text = page.summary
 
 print(f"\nTitle: {page.title}\n")
 # print(f"Summary: {page.summary[:1000]}")
