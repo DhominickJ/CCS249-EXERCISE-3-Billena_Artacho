@@ -2,12 +2,13 @@
 # Created by: Billena Dhominick John and Artacho, Cristopher Ian 
 
 # Creating the Imports
-import wikipediaapi as wk # It returns a more structured data
+import wikipediaapi as wk # It returns a more structured result
 from nltk.util import bigrams as nltk_bigrams
 from nltk.util import trigrams as nltk_trigrams
 from nltk.tokenize import word_tokenize
 from collections import Counter
 from math import log2
+import re
 
 # Getting the RE: Zero Wikipedia Page
 wiki = wk.Wikipedia(user_agent='firefox', language='en')
@@ -16,8 +17,11 @@ text = page.summary[:1000] #It limits our effectivity if we use a limit of 1000 
 text = page.summary
 
 print(f"\nTitle: {page.title}\n")
-# print(f"Summary: {page.summary[:1000]}")
-print(text[:1200])
+
+# Cleaning the text by removing everything not text or spaces
+regex = r"[^\w\s]" # As long as it is not a word or a whitespace
+text = re.sub(regex,'', text)
+print(text)
 
 # Intial values
 LAPLACE_VALUE = 1
@@ -60,7 +64,7 @@ class Bigrams:
                 log_likelihood += -1 * log2(probability)
 
         perplexity = 2 ** (log_likelihood / total_tokens)
-        print(f"Bigram model perplexity: {perplexity:.2f} (Noice)")
+        print(f"Bigram model perplexity: {perplexity:.2f}")
 
 
 class Trigrams: 
